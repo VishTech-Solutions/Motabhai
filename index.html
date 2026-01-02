@@ -520,11 +520,7 @@
         let bottleCount = 0;
         let uppadData = {}; // Will store: { "Dhanvil": 500, "Rahul": 0 }
 
-        // Initialize on page load
-        window.onload = function () {
-            document.getElementById('dateInput').value = currentDate;
-            loadEmployees();
-        };
+      
 
         // Update date when changed
         document.getElementById('dateInput').addEventListener('change', function () {
@@ -844,21 +840,30 @@ const ALLOWED_EMAILS = [
   "mehulbhutka9999@gmail.com"
 ];
 
-// ✅ Initialize ONLY ONCE
 window.addEventListener("load", () => {
 
+  /* ===== Attendance Init ===== */
+  document.getElementById('dateInput').value = currentDate;
+  loadEmployees();
+
+  /* ===== AUTH CHECK ===== */
   const savedEmail = localStorage.getItem("authEmail");
+
   if (ALLOWED_EMAILS.includes(savedEmail)) {
     showApp();
-    return;
+  } else {
+    document.getElementById("loginBox").style.display = "block";
   }
 
+  /* ===== Google Init (ONLY ONCE) ===== */
   google.accounts.id.initialize({
     client_id: "70801928772-s5pr9crte2asuqicojimdtpr324rnpml.apps.googleusercontent.com",
     callback: handleLogin,
     auto_select: false
   });
+
 });
+
 
 // Button click → ONLY UI trigger
 function startLogin() {
@@ -894,4 +899,5 @@ function showApp() {
 
 
 </html>
+
 
