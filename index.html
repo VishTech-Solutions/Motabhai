@@ -425,9 +425,10 @@
 
     <div id="loginBox" style="text-align:center;margin-top:60px;">
         <h2>🔐 Login Required</h2>
-        <button onclick="googleLogin()" style="padding:12px 20px;font-size:16px;">
-            Sign in with Google
+        <button onclick="startLogin()" style="padding:12px 20px;font-size:16px;">
+          Sign in with Google
         </button>
+
     </div>
 
     <div id="app" style="display:none;">
@@ -835,48 +836,61 @@
             }, 3000);
         }
 
-        // Authentication Google 
+<script>
+const ALLOWED_EMAILS = [
+  "vishwagami111@gmail.com",
+  "vishwapatel660@gmail.com",
+  "gyash5750@gmail.com",
+  "mehulbhutka9999@gmail.com"
+];
 
-        const ALLOWED_EMAILS = [
-            "vishwagami111@gmail.com",
-            "vishwapatel660@gmail.com",
-            "gyash5750@gmail.com",
-            "mehulbhutka9999@gmail.com"
-        ];
+// ✅ Initialize ONLY ONCE
+window.addEventListener("load", () => {
 
-        // Auto login check
-        window.addEventListener("load", () => {
-            const savedEmail = localStorage.getItem("authEmail");
-            if (ALLOWED_EMAILS.includes(savedEmail)) {
-                document.getElementById("loginBox").style.display = "none";
-                document.getElementById("app").style.display = "block";
-            }
-        });
+  const savedEmail = localStorage.getItem("authEmail");
+  if (ALLOWED_EMAILS.includes(savedEmail)) {
+    showApp();
+    return;
+  }
 
-        function googleLogin() {
-            google.accounts.id.initialize({
-                client_id: "70801928772-s5pr9crte2asuqicojimdtpr324rnpml.apps.googleusercontent.com",
-                callback: handleLogin
-            });
+  google.accounts.id.initialize({
+    client_id: "70801928772-s5pr9crte2asuqicojimdtpr324rnpml.apps.googleusercontent.com",
+    callback: handleLogin,
+    auto_select: false
+  });
+});
 
-            google.accounts.id.prompt();
-        }
+// Button click → ONLY UI trigger
+function startLogin() {
+  google.accounts.id.renderButton(
+    document.getElementById("loginBox"),
+    { theme: "outline", size: "large" }
+  );
+}
 
-        function handleLogin(response) {
-            const payload = JSON.parse(atob(response.credential.split(".")[1]));
-            const email = payload.email;
+function handleLogin(response) {
+  const payload = JSON.parse(atob(response.credential.split(".")[1]));
+  const email = payload.email;
 
-            if (ALLOWED_EMAILS.includes(email)) {
-                localStorage.setItem("authEmail", email);
-                document.getElementById("loginBox").style.display = "none";
-                document.getElementById("app").style.display = "block";
-            } else {
-                alert("❌ Access Denied");
-            }
-        }
+  if (ALLOWED_EMAILS.includes(email)) {
+    localStorage.setItem("authEmail", email);
+    showApp();
+  } else {
+    alert("❌ Access Denied");
+    google.accounts.id.disableAutoSelect();
+  }
+}
+
+function showApp() {
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("app").style.display = "block";
+}
+</script>
+
 
 
     </script>
 </body>
+
 
 </html>
