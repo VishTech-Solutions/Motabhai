@@ -546,7 +546,9 @@
 
       async function loadEmployees() {
         try {
-          const response = await fetch(`${SCRIPT_URL}?action=getEmployees`);
+          const response = await fetch(
+            `${SCRIPT_URL}?action=getEmployees&key=motabhai_secure_2026`,
+          );
           const data = await response.json();
 
           employees = data
@@ -720,7 +722,11 @@
           uppad: 0,
         });
 
-        const dataToSubmit = { action: "submitDailyData", rows: rows };
+        const dataToSubmit = {
+          action: "submitDailyData",
+          key: "motabhai_secure_2026",
+          rows: rows,
+        };
 
         fetch(SCRIPT_URL, {
           method: "POST",
@@ -791,6 +797,14 @@
         document.getElementById("dateInput").value = currentDate;
         loadEmployees();
       });
+
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      document.onkeydown = function (e) {
+        if (e.keyCode == 123) return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0))
+          return false;
+      };
     </script>
   </body>
 </html>
